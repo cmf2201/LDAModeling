@@ -104,5 +104,5 @@ data_bigrams_trigrams = make_trigrams(data_bigrams)
 # Save the cleaned data to output folder
 write_data(output_path + output_data_name, data_bigrams_trigrams)
 
-# TODO: Add so output folder is printed
-print("Data cleaned, saved to ")
+# Print folder location that Cleaned data is saved to
+print("Data cleaned, saved to " + output_path + output_data_name)
