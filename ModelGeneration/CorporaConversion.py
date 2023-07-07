@@ -3,6 +3,7 @@ import json
 import os
 
 # gensim
+import gensim
 import gensim.corpora as corpora
 from gensim.models import CoherenceModel
 from gensim.models import TfidfModel
@@ -12,8 +13,9 @@ from gensim.models import TfidfModel
 output_path = 'DataOutput/'
 # Name of input data words
 data_words_name = 'MilitaryDataWords.json'
-# Name of output corpus
+# Name of output corpus and id2word
 output_corpus_name = 'MilitaryCorpus.json'
+output_id2word_name = 'MilitaryId2Word.idw'
 # increasing this value will increase the amount of words that are dropped because they are too frequent (according
 # to TF-IDF)
 low_value = 0.035
@@ -63,3 +65,5 @@ for i in range(0, len(corpus)):
 
 # save the corpus as json
 write_data(output_path + output_corpus_name, corpus)
+id2word.save(output_path + output_id2word_name)
+print("Saved corpus as " + output_path + output_corpus_name)
