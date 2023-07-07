@@ -1,30 +1,23 @@
 # general imports
-import json
-import os
+import argparse
 
 # gensim
-import gensim
 import gensim.corpora as corpora
-from gensim.models import CoherenceModel
 from gensim.models import TfidfModel
 # import load_data/write_data from LoadWrite
 from LoadWrite import load_data, write_data
 
-# Folder location for formatted data output
-output_path = 'DataOutput/'
-# Name of input data words
-data_words_name = 'MilitaryDataWords.json'
-# Name of output corpus and id2word
-output_corpus_name = 'MilitaryCorpus.json'
-output_id2word_name = 'MilitaryId2Word.idw'
-# increasing this value will increase the amount of words that are dropped because they are too frequent (according
-# to TF-IDF)
-low_value = 0.035
-
+# Parse the arguments given to DataPrep
+parser = argparse.ArgumentParser()
+parser.add_argument("data_words_path")
+parser.add_argument("output_corpus_path")
+parser.add_argument("output_id2word_path")
+parser.add_argument("low_value")
+args = parser.parse_args()
 
 
 # load the data words
-data_words =  load_data(output_path + data_words_name)
+data_words = load_data(args.data_words_path)
 
 # TF-IDF REMOVAL
 
@@ -44,7 +37,7 @@ for i in range(0, len(corpus)):
     low_value_words = []
     tfidf_ids = [id for id, value in tfidf[bow]]
     bow_ids = [id for id, value in bow]
-    low_value_words = [id for id, value in tfidf[bow] if value < low_value]
+    low_value_words = [id for id, value in tfidf[bow] if value < float(args.low_value)]
     drops = low_value_words + words_missing_in_tfidf
     for item in drops:
         words.append(id2word[item])
@@ -55,6 +48,7 @@ for i in range(0, len(corpus)):
     corpus[i] = new_bow
 
 # save the corpus as json
-write_data(output_path + output_corpus_name, corpus)
-id2word.save(output_path + output_id2word_name)
-print("Saved corpus as " + output_path + output_corpus_name)
+write_data(args.output_corpus_path, corpus)
+id2word.save(args.output_id2word_path)
+print("Saved corpus as " + args.output_corpus_path)
+print("Saved id2words as" + args.output_id2word_path)

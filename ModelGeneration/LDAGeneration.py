@@ -2,42 +2,41 @@ import pyLDAvis
 import pyLDAvis.gensim
 import gensim
 import gensim.corpora as corpora
-import json
 import os
 import webbrowser
+import random
+import argparse
 
 # import load_data/write_data from LoadWrite
-from .LoadWrite import load_data, write_data
+from LoadWrite import load_data
 
-# Parameters for LDA Model
-num_of_topics = 7
-# Folder location for LDA Model output
-output_path = 'Model/'
-# Name of LDA output
-lda_name = 'LdaModel'
-# Folder location for other Data
-input_path = 'DataOutput/'
-# Name of input corpus and id2word
-corpus_name = 'MilitaryCorpus.json'
-id2word_name = 'MilitaryId2Word.idw'
+# Parse the arguments given to DataPrep
+parser = argparse.ArgumentParser()
+parser.add_argument("corpus_path")
+parser.add_argument("id2word_path")
+parser.add_argument("output_lda_path")
+parser.add_argument("num_of_topics")
+parser.add_argument("passes")
+args = parser.parse_args()
 
 # load in corpus and id2word
-corpus = load_data(input_path + corpus_name)
-id2word = corpora.Dictionary.load(input_path + id2word_name)
+corpus = load_data(args.corpus_path)
+id2word = corpora.Dictionary.load(args.id2word_path)
 
 # this little line of code does all of the actual LDA modeling!
 lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
                                            id2word=id2word,
-                                           num_topics=num_of_topics,
-                                           random_state=49,
+                                           num_topics=int(args.num_of_topics),
+                                           random_state=random.randint(1, 100),
                                            update_every=1,
                                            chunksize=100,
-                                           passes=3,
+                                           passes=int(args.passes),
                                            alpha="auto")
 
-lda_model.save(output_path + lda_name)
-print("LDA Model created and saved as " + output_path + lda_name)
+lda_model.save(args.output_lda_path)
+print("LDA Model created and saved as " + args.output_lda_path)
 # pyLDAvis.enable_notebook()
 vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word, mds="mmds", R=20, sort_topics= False)
-pyLDAvis.save_html(vis, 'LDAvisualization/LDA_Visualization.html')
-webbrowser.open_new_tab(os.path.abspath('LDAvisualization/LDA_Visualization.html'))
+pyLDAvis.save_html(vis, 'ModelGeneration/LDAvisualization/LDA_Visualization.html')
+
+webbrowser.open_new_tab(os.path.abspath('ModelGeneration/LDAvisualization/LDA_Visualization.html'))

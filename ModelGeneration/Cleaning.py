@@ -1,6 +1,6 @@
 # general imports
-import json
 import re
+import argparse
 
 # Gensim
 import gensim
@@ -11,19 +11,17 @@ from gensim.models import Phrases
 import spacy
 
 # import load_data/write_data from LoadWrite
-from .LoadWrite import load_data, write_data
+from LoadWrite import load_data, write_data
 
-# Folder location for formatted data output
-output_path = 'DataOutput/'
-# Name of input data file
-data_name = 'MilitaryData.json'
-# Name of output cleaned list of words
-output_data_name = 'MilitaryDataWords.json'
-# minimum word length
-min_word_length = 3
+# Parse the arguments given to DataPrep
+parser = argparse.ArgumentParser()
+parser.add_argument("data_path")
+parser.add_argument("output_data_words_path")
+parser.add_argument("min_word_length")
+args = parser.parse_args()
 
 # load List of articles data
-data = load_data(output_path + data_name)
+data = load_data(args.data_path)
 
 # lemmatization function isolates important words using the spacy library
 def lemmatization(texts, allowed_postags=["NOUN", "ADJ", "VERB", "ADV"]):
@@ -53,7 +51,7 @@ def remove_short(texts):
     for article in texts:
         final = []
         for word in article:
-            if len(word) >= min_word_length:
+            if len(word) >= int(args.min_word_length):
                final.append(word)
         final2.append(final)
     return final2
@@ -92,7 +90,7 @@ data_bigrams = make_bigrams(data_words)
 data_bigrams_trigrams = make_trigrams(data_bigrams)
 
 # Save the cleaned data to output folder
-write_data(output_path + output_data_name, data_bigrams_trigrams)
+write_data(args.output_data_words_path, data_bigrams_trigrams)
 
 # Print folder location that Cleaned data is saved to
-print("Data cleaned, saved to " + output_path + output_data_name)
+print("Data cleaned, saved to " + args.output_data_words_path)
