@@ -7,7 +7,8 @@ import gensim
 import gensim.corpora as corpora
 from gensim.models import CoherenceModel
 from gensim.models import TfidfModel
-
+# import load_data/write_data from LoadWrite
+from LoadWrite import load_data, write_data
 
 # Folder location for formatted data output
 output_path = 'DataOutput/'
@@ -21,16 +22,6 @@ output_id2word_name = 'MilitaryId2Word.idw'
 low_value = 0.035
 
 
-# load data
-def load_data(file):
-    with open(file, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    return data
-
-# write data
-def write_data(file, data):
-    with open(file, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4)
 
 # load the data words
 data_words =  load_data(output_path + data_words_name)

@@ -6,6 +6,8 @@ import json
 import os
 import webbrowser
 
+# import load_data/write_data from LoadWrite
+from .LoadWrite import load_data, write_data
 
 # Parameters for LDA Model
 num_of_topics = 7
@@ -18,17 +20,6 @@ input_path = 'DataOutput/'
 # Name of input corpus and id2word
 corpus_name = 'MilitaryCorpus.json'
 id2word_name = 'MilitaryId2Word.idw'
-
-# load data
-def load_data(file):
-    with open(file, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    return data
-
-# write data
-def write_data(file, data):
-    with open(file, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4)
 
 # load in corpus and id2word
 corpus = load_data(input_path + corpus_name)

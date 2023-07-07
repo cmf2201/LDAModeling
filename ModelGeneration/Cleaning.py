@@ -10,18 +10,8 @@ from gensim.models import Phrases
 # spacy
 import spacy
 
-
-# load data
-def load_data(file):
-    with open(file, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    return data
-
-# write data
-def write_data(file, data):
-    with open(file, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4)
-
+# import load_data/write_data from LoadWrite
+from .LoadWrite import load_data, write_data
 
 # Folder location for formatted data output
 output_path = 'DataOutput/'
@@ -53,7 +43,7 @@ def lemmatization(texts, allowed_postags=["NOUN", "ADJ", "VERB", "ADV"]):
 def gen_words(texts):
     final = []
     for text in texts:
-        new = gensim.utils.simple_preprocess(text, deacc=True)
+        new = simple_preprocess(text, deacc=True)
         final.append(new)
     return (final)
 
