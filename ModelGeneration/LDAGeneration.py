@@ -39,4 +39,4 @@ print("LDA Model created and saved as " + args.output_lda_path)
 vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word, mds="mmds", R=20, sort_topics= False)
 pyLDAvis.save_html(vis, 'ModelGeneration/LDAvisualization/LDA_Visualization.html')
 
-webbrowser.open_new_tab(os.path.abspath('ModelGeneration/LDAvisualization/LDA_Visualization.html'))
+# webbrowser.open_new_tab(os.path.abspath('ModelGeneration/LDAvisualization/LDA_Visualization.html'))

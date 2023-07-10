@@ -15,14 +15,14 @@ parser.add_argument("-d", "--dataprep", help="prepares raw Json data by converti
                     action="store_true")
 
 # Parameters for Cleaning.py
-data_path = 'ModelGeneration/DataOutput/MilitaryData.json' # Path for data formatted from DataPrep (should be same as output_data_path)
+data_path = output_data_path # Path for data formatted from DataPrep (should be same as output_data_path)
 output_data_words_path = 'ModelGeneration/DataOutput/MilitaryDataWords.json'  # Path for formatted data output
 min_word_length = "3" # minimuim word length
 parser.add_argument("-cl", "--cleaning", help="cleans raw data by removing stop words, short words, and generally unhelpfully words",
                     action="store_true")
 
 # Parameters for CorporaConversion.py
-data_words_path = 'ModelGeneration/DataOutput/MilitaryDataWords.json' # Path for data formatted from Cleaning (should be same as output_data_words_path)
+data_words_path = output_data_words_path # Path for data formatted from Cleaning (should be same as output_data_words_path)
 output_corpus_path = 'ModelGeneration/DataOutput/MilitaryCorpus.json' # Path for corpus to be saved in
 output_id2word_path = 'ModelGeneration/DataOutput/MilitaryId2Word.id2word' # Path for corpus to be saved in
 low_value = "0.035" # The threshold for which to cutoff frequent words in TF-IDF (Higher number, more words cutoff)
@@ -30,8 +30,8 @@ parser.add_argument("-co", "--corpora", help="converts the cleaned data into cor
                     action="store_true")
 
 # Parameters for LDAGeneration.py
-corpus_path = 'ModelGeneration/DataOutput/MilitaryCorpus.json' # corpus path (should be same as output_corpus_path)
-id2word_path = 'ModelGeneration/DataOutput/MilitaryId2Word.id2word' # id2word path (should be same as output_id2word_path)
+corpus_path = output_corpus_path # corpus path (should be same as output_corpus_path)
+id2word_path = output_id2word_path # id2word path (should be same as output_id2word_path)
 output_lda_path = 'ModelGeneration/Model/MilitaryLDAmodel' # output path for LDA model
 num_of_topics = "7" # The number of Topic Bubbles to generate: This is also used in Topic Generation
 passes = "3" # The number of passes to do
@@ -43,8 +43,8 @@ parser.add_argument("-di", "--display", help="Displays LDA model HTML",
                     action="store_true")
 
 # Parameters for TopicGeneration.py: NOTE: requires that num_of_topics be defined above.
-gen_data_path = data_path # data path (should be same as output_data_path)
-gen_id2word_path = id2word_path # id2word path (should be same as output_id2word_path)
+gen_data_path = output_data_path # data path (should be same as output_data_path)
+gen_id2word_path = output_id2word_path # id2word path (should be same as output_id2word_path)
 gen_lda_path = output_lda_path # output path for LDA model
 output_topic_path = 'TopicGeneration/Topics/topic.json' # output path for the topics.
 num_of_keywords = '10' # number of keywords to include in headline generation
