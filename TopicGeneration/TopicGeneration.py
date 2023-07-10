@@ -3,7 +3,7 @@ from bertopic import BERTopic
 import re
 import random
 import json
-import os
+import argparse
 
 # T-5 Model
 from transformers import T5Tokenizer, T5ForConditionalGeneration
@@ -11,17 +11,19 @@ from transformers import T5Tokenizer, T5ForConditionalGeneration
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
-# parameters for LDA model
-num_of_topics = 7
-# file location of article Data, id2word, and ldamodel
-data_path = '../ModelGeneration/DataOutput/'
-lda_path = '../ModelGeneration/Model/'
-data_name = 'MilitaryData.json'
-id2word_name = 'MilitaryId2Word.idw'
-lda_name = 'LdaModel'
-# file location to save topic names
-topic_path = 'Topics/'
-topic_name = 'topic.json'
+
+# Parse the arguments given to Topic Generation
+parser = argparse.ArgumentParser()
+parser.add_argument("gen_data_path")
+parser.add_argument("gen_id2word_path")
+parser.add_argument("gen_lda_path")
+parser.add_argument("output_topic_path")
+parser.add_argument("num_of_topics")
+parser.add_argument("num_of_keywords")
+parser.add_argument("num_of_headlines")
+parser.add_argument("include_all_gen_names")
+args = parser.parse_args()
+
 
 # load data
 def load_data(file):
@@ -29,20 +31,22 @@ def load_data(file):
         data = json.load(f)
     return data
 
+
 # write data
 def write_data(file, data):
     with open(file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
 
-lda_model = gensim.models.LdaModel.load(lda_path + lda_name)
-id2word = gensim.corpora.Dictionary.load(data_path + id2word_name)
-data = load_data(data_path + data_name)
+
+lda_model = gensim.models.LdaModel.load(args.gen_lda_path)
+id2word = gensim.corpora.Dictionary.load(args.gen_id2word_path)
+data = load_data(args.gen_data_path)
 
 print("Successfully Loaded Model!")
 
 # store the topic keywords
 topics = []
-for topicNum in range(num_of_topics):
+for topicNum in range(int(args.num_of_topics)):
     topic_terms = lda_model.get_topic_terms(topicNum, topn=30)
     topic_term_words = [(id2word[id], percent) for id, percent in topic_terms]
     topics.append(topic_term_words)
@@ -97,14 +101,14 @@ print("Generating topic names...")
 # generate headlines
 topic_names = []
 for topic in topics:
-    headlines = gen_headlines(topic, number_of_keywords=10, number_of_headlines=10)
+    headlines = gen_headlines(topic, number_of_keywords=int(args.num_of_keywords), number_of_headlines=int(args.num_of_headlines))
     # use the similarity to topic score
     simi, top_lab, score = measure_similarity_of_topic(headlines)
 
     topic_names.append(top_lab)
     print(top_lab)
 
-write_data(topic_path + topic_name, topic_names)
+write_data(args.output_topic_path, topic_names)
 print("Successfully generated all topic names!")
 
 

@@ -42,7 +42,16 @@ parser.add_argument("-m", "--modelgen", help="Generates the LDA model",
 parser.add_argument("-di", "--display", help="Displays LDA model HTML",
                     action="store_true")
 
-
+# Parameters for TopicGeneration.py: NOTE: requires that num_of_topics be defined above.
+gen_data_path = data_path # data path (should be same as output_data_path)
+gen_id2word_path = id2word_path # id2word path (should be same as output_id2word_path)
+gen_lda_path = output_lda_path # output path for LDA model
+output_topic_path = 'TopicGeneration/Topics/topic.json' # output path for the topics.
+num_of_keywords = '10' # number of keywords to include in headline generation
+num_of_headlines = '10' # number of headlines to generate and compare per topic
+include_all_gen_names = 'True' # Whether or not to include all generated names in the output file
+parser.add_argument("-t", "--topicgen", help="Generates Topic names",
+                    action="store_true")
 
 args = parser.parse_args()
 
@@ -65,6 +74,11 @@ if args.modelgen:
     query4 = "python ModelGeneration/LDAGeneration.py " + corpus_path + " " + id2word_path + " " + output_lda_path + " " + num_of_topics + " " + passes
     print(query4)
     os.system(query4)
+
+if args.topicgen:
+    query5 = "python TopicGeneration/TopicGeneration.py " + gen_data_path + " " + gen_id2word_path + " " + gen_lda_path + " " + output_topic_path + " " + num_of_topics + " " + num_of_keywords + " " + num_of_headlines + " " + include_all_gen_names
+    print(query5)
+    os.system(query5)
 
 if args.display:
     webbrowser.open_new_tab(os.path.abspath('ModelGeneration/LDAvisualization/LDA_Visualization.html'))
